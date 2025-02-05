@@ -1,0 +1,57 @@
+name: Run quick tests
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  composer-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer audit
+        run: composer audit
+
+  coding-standards:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+
+      - name: Run PHP CodeSniffer
+        run: vendor/bin/phpcs src tests --standard=PSR12 --colors
+
+  static-code-analysis:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse src tests --level=9
+
+  unit-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+
+      - name: Run PHPUnit
+        uses: php-actions/phpunit@v4
+        env:
+          XDEBUG_MODE: coverage
+        with:
+          php_extensions: xdebug
+          testsuite: unit
+          args: --testdox --coverage-text
