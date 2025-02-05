@@ -1,5 +1,6 @@
 services:
   php-8.3:
+    container_name: php-8.3
     image: php:8.3-alpine
     entrypoint: ['sh', 'entrypoint.sh']
     environment:
