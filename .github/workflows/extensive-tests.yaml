@@ -8,17 +8,17 @@ on:
       - main
 
 jobs:
-  application-and-integration-tests:
+  integration-tests:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Start containers
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Run PHPUnit
-        run: docker-compose exec -T php-8.3 vendor/bin/phpunit --testsuite integration --testdox
+        run: docker compose exec -T php-8.3 vendor/bin/phpunit --testsuite integration --testdox
 
       - name: Stop containers
-        run: docker-compose down -v
+        run: docker compose down -v
