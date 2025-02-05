@@ -5,8 +5,11 @@ services:
     environment:
       XDEBUG_CONFIG: 'client_host=host.docker.internal'
       XDEBUG_MODE: 'coverage,debug'
+    depends_on:
+      redis-stack:
+        condition: service_healthy
     volumes:
-      - ./:/var/www/event-storage-in-redis-with-php
+        - ./:/var/www/event-storage-in-redis-with-php
     working_dir: /var/www/event-storage-in-redis-with-php
 
   redis-stack:
@@ -14,3 +17,8 @@ services:
     ports:
       - "6379:6379"
       - "8001:8001"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
