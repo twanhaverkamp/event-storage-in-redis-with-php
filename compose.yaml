@@ -6,11 +6,6 @@ services:
     environment:
       XDEBUG_CONFIG: 'client_host=host.docker.internal'
       XDEBUG_MODE: 'coverage,debug'
-    healthcheck:
-      test: ["CMD", "test -d \"vendor\" || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
     depends_on:
       redis-stack:
         condition: service_healthy
