@@ -10,7 +10,7 @@ services:
       test: ["CMD", "/vendor/bin/phpunit", "--version"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     depends_on:
       redis-stack:
         condition: service_healthy
