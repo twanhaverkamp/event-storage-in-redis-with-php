@@ -17,11 +17,8 @@ jobs:
       - name: Start containers
         run: docker compose up -d
 
-      - name: Wait for Composer
-        run: |
-          while ! [ docker compose logs | grep "Generating autoload files" ]; do
-            sleep 2
-          done
+      - name: Wait
+        run: sleep 30
 
       - name: Run PHPUnit
         run: docker compose exec php-8.3 vendor/bin/phpunit --testsuite integration --testdox
