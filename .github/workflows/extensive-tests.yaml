@@ -17,8 +17,13 @@ jobs:
       - name: Start containers
         run: docker compose up -d
 
-      - name: Wait for containers
-        run: sleep 10
+      - name: Wait for PHPUnit
+        run: |
+          until vendor/bin/phpunit --version
+          do
+            echo "."
+            sleep 2
+          done
 
       - name: Run PHPUnit
         run: docker compose exec php-8.3 vendor/bin/phpunit --testsuite integration --testdox
