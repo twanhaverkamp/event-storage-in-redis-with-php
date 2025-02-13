@@ -19,7 +19,7 @@ jobs:
 
       - name: Wait for PHPUnit
         run: |
-          until [ -f vendor/bin/phpunit ]
+          until vendor/bin/phpunit --version
           do
             sleep 1
           done
