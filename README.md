@@ -105,8 +105,6 @@ class EventStoreServiceProvider extends ServiceProvider
 }
 ```
 
-See for more details the [Laravel](https://laravel.com/docs/master/providers#the-register-method) documentation.
-
 #### Symfony project
 
 If you're working in a [Symfony](https://symfony.com/) project, you can leverage it's built-in "autowire" mechanism
