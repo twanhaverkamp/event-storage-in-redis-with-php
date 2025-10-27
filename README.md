@@ -29,7 +29,7 @@ composer require composer require twanhaverkamp/event-storage-in-redis-with-php:
 
 ### Implementation
 Most PHP frameworks like Symfony and Laravel allows you to register classes as services; If you like, you can register
-this Event store where you bind it to the EventStoreInterface 
+this Event store where you bind it to the EventStoreInterface.
 
 #### Connect with Redis
 When constructing the [Event Store](/src/Event/EventStore/Redis.php) you're required to pass an instance of
@@ -59,8 +59,25 @@ $eventStore = new EventStore\Redis(
 ```
 
 > An Event describer can be found in the "Event Sourcing with PHP" library, which is automatically installed
-> whenever you install this package. You can create your own describer if you like; just make sure it implements the
-> EventDescriberInterface which can also be found in the "Event Sourcing with PHP" library.
+> whenever you install this package. You can create your own Describer if you like; just make sure it implements the
+> EventDescriberInterface, which can also be found in the "Event Sourcing with PHP" library.
+
+#### Event registration
+In order for the Event Store to know which type of Events exist, you need to register them in the Event Store:
+
+```php
+use TwanHaverkamp\EventSourcingWithPhp\Example;
+use TwanHaverkamp\EventStorageInRedisWithPhp\Event\EventStore;
+
+EventStore\Redis::register(
+    Example\Event\InvoiceWasCreated::class,
+    Example\Event\PaymentTransactionWasStarted::class,
+    Example\Event\PaymentTransactionWasCompleted::class,
+    Example\Event\PaymentTransactionWasCancelled::class,
+);
+```
+
+> You have to register your Events before actually using the Event Store.
 
 #### Event storage
 When you pass an Aggregate to the `save` function it loops over its Events and for every Event it will create

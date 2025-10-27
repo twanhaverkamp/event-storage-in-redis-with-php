@@ -18,6 +18,8 @@ use TwanHaverkamp\EventSourcingWithPhp\Event\Exception;
 
 class Redis implements EventStore\EventStoreInterface
 {
+    use Traits\Register;
+
     protected const int KEY_RANGE_LIMIT = 25;
 
     public function __construct(
@@ -28,7 +30,8 @@ class Redis implements EventStore\EventStoreInterface
 
     /**
      * @throws Exception\EventRetrievalFailedException when fetching keys with ZRANGE fails or
-     *                                                 when fetching events with GET fails.
+     *                                                 when fetching events with GET fails or
+     *                                                 when the Event class cannot be found.
      */
     public function load(Aggregate\AggregateInterface $aggregate): void
     {
@@ -45,13 +48,27 @@ class Redis implements EventStore\EventStoreInterface
 
             /**
              * @var array{
-             *     eventClass: class-string<Event\EventInterface>,
+             *     type: class-string<Event\EventInterface>,
              *     payload: array<string, mixed>,
              *     recordedAt: string,
              *     microseconds: int,
              * } $data
              */
             $data = json_decode($json, true);
+
+            $eventClass = array_values(
+                array_filter(
+                    static::$registeredEventClasses,
+                    fn (string $eventClass) => $this->describer->describe($eventClass) === $data['type'],
+                ),
+            )[0] ?? null;
+
+            if ($eventClass == null) {
+                throw new Exception\EventRetrievalFailedException(sprintf(
+                    'Could not find an Event class for type \'%s\'.',
+                    $data['type'],
+                ));
+            }
 
             /** @var DateTime $recordedAt */
             $recordedAt = DateTime::createFromFormat(DATE_ATOM, $data['recordedAt']);
@@ -62,7 +79,7 @@ class Redis implements EventStore\EventStoreInterface
                 $data['microseconds'],
             );
 
-            $aggregate->apply($data['eventClass']::fromPayload(
+            $aggregate->apply($eventClass::fromPayload(
                 $aggregate->getAggregateRootId(),
                 $data['payload'],
                 DateTimeImmutable::createFromMutable($recordedAt),
@@ -79,7 +96,7 @@ class Redis implements EventStore\EventStoreInterface
         foreach ($aggregate->getEvents() as $event) {
             try {
                 $this->client->set($key = $this->createKey($event), json_encode([
-                    'eventClass'   => $event::class,
+                    'type'         => $this->describer->describe($event),
                     'payload'      => $event->getPayload(),
                     'recordedAt'   => $event->getRecordedAt()->format(DATE_ATOM),
                     'microseconds' => (int)$event->getRecordedAt()->format('u'),
