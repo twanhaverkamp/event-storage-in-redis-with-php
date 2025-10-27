@@ -87,7 +87,7 @@ class RedisTest extends TestCase
 
     #[Attributes\Test]
     #[Attributes\TestDox('Assert that \'load\' throws an EventRetrievalFailedException for an invalid \'type\'')]
-    public function loadWithInvalidEventClassThrowsEventRetrievalFailedException(): void
+    public function loadWithInvalidTypeThrowsEventRetrievalFailedException(): void
     {
         $describer = new EventDescriber\KebabCase();
 

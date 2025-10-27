@@ -48,7 +48,7 @@ class Redis implements EventStore\EventStoreInterface
 
             /**
              * @var array{
-             *     type: class-string<Event\EventInterface>,
+             *     type: string,
              *     payload: array<string, mixed>,
              *     recordedAt: string,
              *     microseconds: int,
