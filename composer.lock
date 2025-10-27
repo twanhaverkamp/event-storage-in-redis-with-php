@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4213d1e8a9342390d25d2532eb81f91",
+    "content-hash": "a35eebdc90f7ae08ce0a39b24901d800",
     "packages": [
         {
             "name": "brick/math",
@@ -310,16 +310,16 @@
         },
         {
             "name": "twanhaverkamp/event-sourcing-with-php",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twanhaverkamp/event-sourcing-with-php.git",
-                "reference": "4d8ab9ef5a5171fb3b10627bbee2a9d7843d8613"
+                "reference": "9fa8fa034827da88d2e1677e2b86e5a46416c1e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twanhaverkamp/event-sourcing-with-php/zipball/4d8ab9ef5a5171fb3b10627bbee2a9d7843d8613",
-                "reference": "4d8ab9ef5a5171fb3b10627bbee2a9d7843d8613",
+                "url": "https://api.github.com/repos/twanhaverkamp/event-sourcing-with-php/zipball/9fa8fa034827da88d2e1677e2b86e5a46416c1e9",
+                "reference": "9fa8fa034827da88d2e1677e2b86e5a46416c1e9",
                 "shasum": ""
             },
             "require": {
@@ -352,9 +352,9 @@
             "description": "Event Sourcing with PHP",
             "support": {
                 "issues": "https://github.com/twanhaverkamp/event-sourcing-with-php/issues",
-                "source": "https://github.com/twanhaverkamp/event-sourcing-with-php/tree/1.1.0"
+                "source": "https://github.com/twanhaverkamp/event-sourcing-with-php/tree/1.2.0"
             },
-            "time": "2025-01-26T19:07:17+00:00"
+            "time": "2025-10-25T19:26:54+00:00"
         }
     ],
     "packages-dev": [

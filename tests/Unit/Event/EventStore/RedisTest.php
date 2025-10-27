@@ -86,6 +86,44 @@ class RedisTest extends TestCase
     }
 
     #[Attributes\Test]
+    #[Attributes\TestDox('Assert that \'load\' throws an EventRetrievalFailedException for an invalid \'type\'')]
+    public function loadWithInvalidTypeThrowsEventRetrievalFailedException(): void
+    {
+        $describer = new EventDescriber\KebabCase();
+
+        $key = sprintf(
+            '%s:%d-%s',
+            $aggregateRootId = $this->aggregate->getAggregateRootId()->toString(),
+            $this->aggregate->getEvents()[0]->getRecordedAt()->format('Uu'),
+            $describer->describe($this->aggregate->getEvents()[0]),
+        );
+
+        $this->expectException(Exception\EventRetrievalFailedException::class);
+        $this->expectExceptionMessage('Could not find an Event class for type \'invalid-type\'.');
+
+        $client = $this->createMock(PredisClientInterface::class);
+        $client
+            ->method('__call')
+            ->willReturnCallback(function ($method) use ($key) {
+                if ($method === 'get') {
+                    return json_encode([
+                        'type'         => 'invalid-type',
+                        'payload'      => $this->aggregate->getEvents()[0]->getPayload(),
+                        'recordedAt'   => $this->aggregate->getEvents()[0]->getRecordedAt()->format(DATE_ATOM),
+                        'microseconds' => (int)$this->aggregate->getEvents()[0]->getRecordedAt()->format('u'),
+                    ]);
+                }
+
+                return [$key];
+            });
+
+        $eventStore = new EventStore\Redis($client, $describer);
+        $eventStore->load(
+            Example\Aggregate\Invoice::init($aggregateRootId),
+        );
+    }
+
+    #[Attributes\Test]
     #[Attributes\TestDox('Assert that \'save\' throws an EventStorageFailedException when adding event fails')]
     public function saveFailedToSetKeyValueThrowsEventStorageFailedException(): void
     {

@@ -33,6 +33,12 @@ class RedisTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        EventStore\Redis::register(
+            Example\Event\InvoiceWasCreated::class,
+            Example\Event\PaymentTransactionWasStarted::class,
+            Example\Event\PaymentTransactionWasCompleted::class,
+        );
+
         static::$client = new PredisClient([
             'scheme' => 'tcp',
             'host'   => 'redis-stack',
@@ -160,7 +166,7 @@ class RedisTest extends TestCase
     {
         /**
          * @var array{
-         *     eventClass: class-string<Event\EventInterface>,
+         *     type: string,
          *     payload: array{
          *         number: string,
          *         items: array{
@@ -179,7 +185,7 @@ class RedisTest extends TestCase
          */
         $data = json_decode(static::$client->get($key) ?? '{}', true, JSON_THROW_ON_ERROR);
 
-        static::assertSame(Example\Event\InvoiceWasCreated::class, $data['eventClass']);
+        static::assertSame('invoice-was-created', $data['type']);
 
         if (isset(static::$events[0]) === false) {
             static::fail(sprintf(
@@ -214,7 +220,7 @@ class RedisTest extends TestCase
     {
         /**
          * @var array{
-         *     eventClass: class-string<Event\EventInterface>,
+         *     type: string,
          *     payload: array{
          *         paymentMethod: string,
          *         amount: float,
@@ -225,7 +231,7 @@ class RedisTest extends TestCase
          */
         $data = json_decode(static::$client->get($key) ?? '{}', true, JSON_THROW_ON_ERROR);
 
-        static::assertSame(Example\Event\PaymentTransactionWasStarted::class, $data['eventClass']);
+        static::assertSame('payment-transaction-was-started', $data['type']);
 
         if (isset(static::$events[1]) === false) {
             static::fail(sprintf(
@@ -250,14 +256,14 @@ class RedisTest extends TestCase
     {
         /**
          * @var array{
-         *     eventClass: class-string<Event\EventInterface>,
+         *     type: string,
          *     recordedAt: string,
          *     microseconds: int,
          * } $data
          */
         $data = json_decode(static::$client->get($key) ?? '{}', true, JSON_THROW_ON_ERROR);
 
-        static::assertSame(Example\Event\PaymentTransactionWasCompleted::class, $data['eventClass']);
+        static::assertSame('payment-transaction-was-completed', $data['type']);
 
         if (isset(static::$events[2]) === false) {
             static::fail(sprintf(
