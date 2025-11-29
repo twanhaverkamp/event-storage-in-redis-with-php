@@ -34,6 +34,7 @@ class RegisterTest extends TestCase
     #[Attributes\TestDox('Assert that \'register\' filters out non-Event classes')]
     public function registerFiltersNonEventClasses(): void
     {
+        /** @phpstan-ignore argument.type */
         $this->register('invalid-event-class');
 
         static::assertSame([], static::$registeredEventClasses);
