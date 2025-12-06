@@ -127,7 +127,7 @@ class RedisTest extends TestCase
     #[Attributes\Test]
     #[Attributes\TestDox('Assert that \'load\' populates the Aggregate')]
     #[Attributes\Depends('save')]
-    public function loadPopulatesAggregateWithoutEvents(Example\Aggregate\Invoice $invoice): void
+    public function loadPopulatesAggregate(Example\Aggregate\Invoice $invoice): void
     {
         $aggregateRootId = $invoice->getAggregateRootId()->toString();
         $createdAt = $invoice->createdAt->format(DATE_ATOM);
