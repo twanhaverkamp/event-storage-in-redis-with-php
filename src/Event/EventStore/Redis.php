@@ -14,6 +14,7 @@ use TwanHaverkamp\EventSourcingWithPhp\Aggregate;
 use TwanHaverkamp\EventSourcingWithPhp\Event;
 use TwanHaverkamp\EventSourcingWithPhp\Event\EventDescriber;
 use TwanHaverkamp\EventSourcingWithPhp\Event\EventStore;
+use TwanHaverkamp\EventSourcingWithPhp\Event\EventStore\Traits;
 use TwanHaverkamp\EventSourcingWithPhp\Event\Exception;
 
 class Redis implements EventStore\EventStoreInterface
