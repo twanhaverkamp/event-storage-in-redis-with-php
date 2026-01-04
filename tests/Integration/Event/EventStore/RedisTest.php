@@ -55,7 +55,10 @@ class RedisTest extends TestCase
         }
 
         if (static::$aggregateRootId !== null && static::$members !== null) {
-            $removed = static::$client->zrem(static::$aggregateRootId, ...static::$members);
+            $removed = static::$client->zrem(
+                static::$aggregateRootId,
+                ...static::$members, // @phpstan-ignore argument.named
+            );
 
             static::assertCount($removed, static::$members);
         }
@@ -170,14 +173,12 @@ class RedisTest extends TestCase
          *     payload: array{
          *         number: string,
          *         items: array{
-         *             array{
-         *                 reference: string,
-         *                 description: string,
-         *                 quantity: int,
-         *                 price: float,
-         *                 tax: float,
-         *             },
-         *         },
+         *             reference: string,
+         *             description: string,
+         *             quantity: int,
+         *             price: float,
+         *             tax: float,
+         *         }[],
          *     },
          *     recordedAt: string,
          *     microseconds: int,
